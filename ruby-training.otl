@@ -1,0 +1,288 @@
+Ruby for Test Engineers
+Who am I?
+	Sam Stokes
+	From: London, UK
+	At LinkedIn for 2 years
+	Now: Pulse Android (Java)
+	Previously: 6 years of Ruby
+Outline
+	Refresher: basics
+	Rubyisms
+		Arrays and hashes
+		Optional syntax
+		OO
+		blocks
+		style
+	Tools
+		irb
+	Data munging
+		String#split, String#strip
+		regex
+		Enumerable methods
+	RubyGems
+		Installing and using
+		Finding gems
+		Examples
+		Bundler
+	RVM
+	Example - Testing Pulse Twitter sharing
+	TODO update outline
+	TODO split outline into 2
+Overview
+	What is Ruby?
+		interpreted
+		dynamically typed
+		designed for "programmer happiness"
+		a real programming language!
+	TODO Ruby LoC in network trunk
+Syntax refresher
+	<RUBY
+	<# Comments
+	<
+	<# Variables:
+	<name = "Sam"       # strings
+	<country = 'UK'     # single quotes work too
+	<age  = 29
+	<dog  = nil         # I don't have a dog
+	<
+	<# Booleans:
+	<name == 'Sam'      # => true
+	<age > 30           # => false
+	<
+	<# Simple output:
+	<puts name
+irb
+	>MARKDOWN
+	>interactive ruby prompt
+	>-----------------------
+	<RUBY
+	<irb(main):001:0> name = 'Sam'
+	<=> "Sam"
+	<irb(main):002:0> name.size
+	<=> 3
+	<irb(main):003:0> full_name = name + ' Stokes'
+	<=> "Sam Stokes"
+	<irb(main):004:0> puts "Hello #{name}!"
+	<Hello Sam!
+	<=> nil
+Syntax refresher - continued
+	<RUBY
+	<# Branching
+	<if age >= 21             # no need for parentheses
+	<  puts "Whiskey, neat"
+	<else
+	<  puts "Orange juice"
+	<end
+	<
+	<unless country == 'USA'
+	<  puts "Are you authorised to work in the United States?"
+	<end
+Syntax refresher - continued
+	<RUBY
+	<# Calling methods
+	<country.sub('K', 'SA')   # => 'USA'
+	<
+	<# Defining methods
+	<def drink(age)
+	<  if age >= 21
+	<    puts "Whiskey, neat"
+	<  else
+	<    puts "Orange juice"
+	<  end
+	<end
+Collections
+	<RUBY
+	<# Arrays
+	<dog_breeds = ['Golden Retriever', 'Pomeranian', 'Chihuahua']
+	<
+	<dog_breeds[1]                   # => 'Pomeranian'
+	<dog_breeds.size                 # => 3
+	<
+	<# Hashes (a.k.a. dictionaries, maps)
+	<noises = {'dog' => 'Woof', 'cat' => 'Meow', 'snake' => nil}
+	<
+	<noises['dog']               # => 'Woof'
+Hashes - missing elements
+	<RUBY
+	<noises['snake']             # => nil
+	<noises['kangaroo']          # => nil (no exception!)
+	<
+	<# How to distinguish "value is nil" from "key is missing"?
+	<
+	<noises.key?('snake')        # => true
+	<noises.key?('kangaroo')     # => false
+Syntax - oddities
+	<RUBY
+	<# parentheses are optional for method calls
+	<name.size                        # => 3
+	<name.size()                      # => 3
+	<
+	<puts age                         # prints 29
+	<puts(age)                        # prints 29
+	<
+	<country.sub 'K', 'SA'            # => 'USA'
+	<country.sub('K', 'SA')           # => 'USA'
+Syntax - oddities
+	<RUBY
+	<# parentheses are optional for method calls
+	<name.size                        # => 3
+	<#name.size()                     # => 3
+	<
+	<puts age                         # prints 29
+	<#puts(age)                       # prints 29
+	<
+	<#country.sub 'K', 'SA'           # => 'USA'
+	<country.sub('K', 'SA')           # => 'USA'
+	Convention
+		: use parentheses if 2 or more arguments
+Syntax - oddities
+	<RUBY
+	<# postfix conditionals
+	<puts "Have a beer" if age >= 21
+	<
+	<# method names can end with ? or !
+	<name.start_with?('S')            # => true
+	<dog_breeds.empty?                # => false
+	<dog_breeds.shuffle!              # modifies original array
+	<
+	<# String interpolation
+	<"Hello #{name}!"                 # => 'Hello Sam!'
+	<# double quotes only
+	<'Hello #{name}!'                 # => 'Hello #{name}!'
+Debugging tools - puts
+	<RUBY
+	<puts "Hello #{name}!"
+	<# Hello Sam!
+	<
+	<puts 6 * 7
+	<# 42
+Debugging tools - inspect
+	Useful if you don't know the type of a value
+	<RUBY
+	<twitter_client = Twitter::Client.new(token)
+	<
+	<tweets = twitter_client.user_timeline('samstokes')
+	<
+	<puts "Got tweets for samstokes: #{tweets.inspect}"
+	<# Got tweets for samstokes: [#<Tweet>, #<Tweet>, ...]
+Debugging tools - p
+	Shortcut
+	<RUBY
+	<p tweets
+	<# Got tweets for samstokes: [#<Tweet>, #<Tweet>, ...]
+	<
+	<puts tweets.inspect
+	<# Got tweets for samstokes: [#<Tweet>, #<Tweet>, ...]
+Documentation!
+	Ruby standard library has good docs
+		http://ruby-doc.org/
+	So do most Ruby gems
+Blocks
+	<RUBY
+	<dog_breeds = ['Golden Retriever', 'Pomeranian', 'Chihuahua']
+	<dog_breeds.each do |dog|
+	<  puts dog
+	<end
+	<# Prints:
+	<#   Golden Retriever
+	<#   Pomeranian
+	<#   Chihuahua
+Blocks
+	<RUBY
+	<dog_breeds = ['Golden Retriever', 'Pomeranian', 'Chihuahua']
+	<dog_breeds.each do |dog|
+	<  puts dog
+	<end
+	>MARKDOWN
+	>*TODO* maybe this is confusing - Ryan thought blocks were for arrays
+	>
+	>`each` is just a method that Array supports
+	>
+	>Ruby method calls can take a code block
+	>
+	>`each` calls the block once for each item in the array
+	>
+	>passes the item as `dog`
+Using blocks
+	Run code on Android but not iOS:
+	<RUBY
+	<def if_android(&block)         # block argument starts with &
+	<  if device_type == 'android'
+	<    block.call
+	<  end
+	<end
+	<
+	<
+	<if_android do
+	<  click button1
+	<end
+Using blocks
+	Run code that requires login:
+	<RUBY
+	<def with_login(username, password, &block)
+	<  user_account = login(username, password)
+	<
+	<  block.call(user_account)
+	<
+	<ensure
+	<  user_account.logout
+	<end
+Using blocks
+	Run code that requires login:
+	<RUBY
+	<with_login('samstokes', 'secretpassword') do |user|
+	<  text_field.type "My memberid is #{user.memberid}"
+	<  button.click
+	<end
+Blocks - setup and cleanup
+	<RUBY
+	<# not logged in yet
+	<
+	<with_login('samstokes', 'secretpassword') do |user|
+	<  # in here we are logged in
+	<
+	<  text_field.type "My memberid is #{user.memberid}"
+	<  button.click
+	<end
+	<
+	<# back to logged out
+	clean up resources
+	undo changes
+	etc...
+Classes and objects
+	In Ruby everything is an object
+	<RUBY
+	<3.class                  # => Fixnum
+	<3.odd?                   # => true
+	<
+	<'Sam'.class              # => String
+	<'Sam'.upcase             # => 'SAM'
+	<
+	<[4, 5, 6].class          # => Array
+	<[4, 5, 6].size           # => 3
+Classes and objects
+	>MARKDOWN
+	>*Everything* is an object!
+	>--------------------------
+	<RUBY
+	<nil.class                # => NilClass
+	<
+	<nil.size                 # NoMethodError: undefined method
+	<                         # `size' for nil:NilClass
+Defining classes
+	TODO McTODO
+	<RUBY
+	<class LoginScreen
+	<  def 
+	<end
+Data munging
+	String#split, String#strip
+	regex
+	Enumerable methods
+RubyGems
+	Installing and using
+	Finding gems
+	Examples
+	Bundler
+RVM
+Example - Testing Pulse Twitter sharing
