@@ -1,4 +1,4 @@
-Ruby for Test Engineers
+Ruby for Test Engineers - Session 1
 Who am I?
 	Sam Stokes
 	sstokes@linkedin.com
@@ -12,7 +12,6 @@ Outline
 	Ruby oddities
 	Debugging tools
 	Processing data
-	RubyGems
 Overview
 	What is Ruby?
 		interpreted
@@ -305,134 +304,4 @@ Searching
 	<
 	<non_pizzas
 	<# => ['lol', 'I like sandwiches', ...]
-RubyGems
-	Overview
-	Finding gems
-	Installing and using
-	Example gems
-RubyGems - Overview
-	A "gem" is a Ruby package
-	"RubyGems" is a global warehouse of gems
-		Open source
-		Anyone can create a gem
-		Some very high quality
-		Some experimental
-RubyGems - Finding gems
-	Google!
-	DEMO
-RubyGems - Installing and using
-	Install the gem
-	<BASH
-	<gem install twitter
-	Use the gem
-	<RUBY
-	<require 'twitter'
-	<
-RubyGems - Example gems
-	TODO
-Bundler
-	TODO
 Any questions?
------ Session 2 -----
-Outline
-	TODO
-Blocks
-	<RUBY
-	<dog_breeds = ['Golden Retriever', 'Pomeranian', 'Chihuahua']
-	<dog_breeds.each do |dog|
-	<  puts dog
-	<end
-	<# Prints:
-	<#   Golden Retriever
-	<#   Pomeranian
-	<#   Chihuahua
-Blocks
-	<RUBY
-	<dog_breeds = ['Golden Retriever', 'Pomeranian', 'Chihuahua']
-	<dog_breeds.each do |dog|
-	<  puts dog
-	<end
-	>MARKDOWN
-	>*TODO* maybe this is confusing - Ryan thought blocks were for arrays
-	>
-	>`each` is just a method that Array supports
-	>
-	>Ruby method calls can take a code block
-	>
-	>`each` calls the block once for each item in the array
-	>
-	>passes the item as `dog`
-Using blocks
-	Run code on Android but not iOS:
-	<RUBY
-	<def if_android(&block)         # block argument starts with &
-	<  if device_type == 'android'
-	<    block.call
-	<  end
-	<end
-	<
-	<
-	<if_android do
-	<  click button1
-	<end
-Using blocks
-	Run code that requires login:
-	<RUBY
-	<def with_login(username, password, &block)
-	<  user_account = login(username, password)
-	<
-	<  block.call(user_account)
-	<
-	<ensure
-	<  user_account.logout
-	<end
-Using blocks
-	Run code that requires login:
-	<RUBY
-	<with_login('samstokes', 'secretpassword') do |user|
-	<  text_field.type "My memberid is #{user.memberid}"
-	<  button.click
-	<end
-Blocks - setup and cleanup
-	<RUBY
-	<# not logged in yet
-	<
-	<with_login('samstokes', 'secretpassword') do |user|
-	<  # in here we are logged in
-	<
-	<  text_field.type "My memberid is #{user.memberid}"
-	<  button.click
-	<end
-	<
-	<# back to logged out
-	clean up resources
-	undo changes
-	etc...
-Classes and objects
-	In Ruby everything is an object
-	<RUBY
-	<3.class                  # => Fixnum
-	<3.odd?                   # => true
-	<
-	<'Sam'.class              # => String
-	<'Sam'.upcase             # => 'SAM'
-	<
-	<[4, 5, 6].class          # => Array
-	<[4, 5, 6].size           # => 3
-Classes and objects
-	>MARKDOWN
-	>*Everything* is an object!
-	>--------------------------
-	<RUBY
-	<nil.class                # => NilClass
-	<
-	<nil.size                 # NoMethodError: undefined method
-	<                         # `size' for nil:NilClass
-Defining classes
-	TODO McTODO
-	<RUBY
-	<class LoginScreen
-	<  def 
-	<end
-RVM
-Example - Testing Pulse Twitter sharing
