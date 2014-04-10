@@ -7,34 +7,39 @@ Who am I?
 	Previously: 6 years of Ruby
 Outline
 	Refresher: basics
-	Rubyisms
-		Arrays and hashes
-		Optional syntax
-		OO
-		blocks
-		style
-	Tools
-		irb
-	Data munging
-		String#split, String#strip
-		regex
-		Enumerable methods
+	Collections - arrays, hashes
+	Ruby oddities
+	Debugging tools
+	Processing data
 	RubyGems
-		Installing and using
-		Finding gems
-		Examples
-		Bundler
-	RVM
-	Example - Testing Pulse Twitter sharing
-	TODO update outline
-	TODO split outline into 2
 Overview
 	What is Ruby?
 		interpreted
 		dynamically typed
+		object oriented
 		designed for "programmer happiness"
 		a real programming language!
-	TODO Ruby LoC in network trunk
+Ruby at LinkedIn
+Ruby at LinkedIn
+	>MARKDOWN
+	><div class="huge">2.4 million LoC</div>
+irb
+	>MARKDOWN
+	>interactive ruby prompt
+	>-----------------------
+	<ruby
+	<irb(main):001:0> name = 'Sam'
+	<=> "Sam"
+	<
+	<irb(main):002:0> name.size
+	<=> 3
+	<
+	<irb(main):003:0> full_name = name + ' Stokes'
+	<=> "Sam Stokes"
+	<
+	<irb(main):004:0> puts "Hello #{name}!"
+	<Hello Sam!
+	<=> nil
 Syntax refresher
 	<RUBY
 	<# Comments
@@ -51,31 +56,13 @@ Syntax refresher
 	<
 	<# Simple output:
 	<puts name
-irb
-	>MARKDOWN
-	>interactive ruby prompt
-	>-----------------------
-	<RUBY
-	<irb(main):001:0> name = 'Sam'
-	<=> "Sam"
-	<irb(main):002:0> name.size
-	<=> 3
-	<irb(main):003:0> full_name = name + ' Stokes'
-	<=> "Sam Stokes"
-	<irb(main):004:0> puts "Hello #{name}!"
-	<Hello Sam!
-	<=> nil
 Syntax refresher - continued
 	<RUBY
 	<# Branching
-	<if age >= 21             # no need for parentheses
+	<if age >= 21        # no parentheses!
 	<  puts "Whiskey, neat"
 	<else
 	<  puts "Orange juice"
-	<end
-	<
-	<unless country == 'USA'
-	<  puts "Are you authorised to work in the United States?"
 	<end
 Syntax refresher - continued
 	<RUBY
@@ -91,64 +78,111 @@ Syntax refresher - continued
 	<  end
 	<end
 Collections
+	Arrays
+	Hashes
+Collections - Arrays
 	<RUBY
 	<# Arrays
-	<dog_breeds = ['Golden Retriever', 'Pomeranian', 'Chihuahua']
+	<dog_breeds = [
+	<  'Golden Retriever',
+	<  'Pomeranian',
+	<  'Chihuahua',
+	<]
 	<
-	<dog_breeds[1]                   # => 'Pomeranian'
-	<dog_breeds.size                 # => 3
-	<
+	<dog_breeds[1]         # => 'Pomeranian'
+	<dog_breeds.size       # => 3
+Collections - Hashes
+	<RUBY
 	<# Hashes (a.k.a. dictionaries, maps)
-	<noises = {'dog' => 'Woof', 'cat' => 'Meow', 'snake' => nil}
+	<noises = {
+	<  'dog' => 'Woof',
+	<  'cat' => 'Meow',
+	<  'snake' => nil,
+	<}
 	<
-	<noises['dog']               # => 'Woof'
+	<noises['dog']         # => 'Woof'
 Hashes - missing elements
 	<RUBY
 	<noises['snake']             # => nil
-	<noises['kangaroo']          # => nil (no exception!)
+	<noises['kangaroo']          # => nil
+	<# no exception!
 	<
-	<# How to distinguish "value is nil" from "key is missing"?
+	<# How to distinguish "value is nil"
+	<# from "key is missing"?
 	<
 	<noises.key?('snake')        # => true
 	<noises.key?('kangaroo')     # => false
 Syntax - oddities
 	<RUBY
-	<# parentheses are optional for method calls
-	<name.size                        # => 3
-	<name.size()                      # => 3
+	<unless member.contacts.size > 10
+	<  puts 'Please import your address book.'
+	<end
+	Can use "else"
+		confusing!
+Syntax - oddities
+	<RUBY
+	<# parentheses are optional
+	<# for method calls
+	<name.size                   # => 3
+	<name.size()                 # => 3
 	<
-	<puts age                         # prints 29
-	<puts(age)                        # prints 29
+	<puts age                    # prints 29
+	<puts(age)                   # prints 29
 	<
-	<country.sub 'K', 'SA'            # => 'USA'
-	<country.sub('K', 'SA')           # => 'USA'
+	<country.sub 'K', 'SA'       # => 'USA'
+	<country.sub('K', 'SA')      # => 'USA'
 Syntax - oddities
 	<RUBY
 	<# parentheses are optional for method calls
-	<name.size                        # => 3
-	<#name.size()                     # => 3
+	<name.size                   # => 3
+	<#name.size()                # => 3
 	<
-	<puts age                         # prints 29
-	<#puts(age)                       # prints 29
+	<puts age                    # prints 29
+	<#puts(age)                  # prints 29
 	<
-	<#country.sub 'K', 'SA'           # => 'USA'
-	<country.sub('K', 'SA')           # => 'USA'
+	<#country.sub 'K', 'SA'      # => 'USA'
+	<country.sub('K', 'SA')      # => 'USA'
 	Convention
 		: use parentheses if 2 or more arguments
 Syntax - oddities
-	<RUBY
+	<ruby
 	<# postfix conditionals
 	<puts "Have a beer" if age >= 21
 	<
 	<# method names can end with ? or !
-	<name.start_with?('S')            # => true
-	<dog_breeds.empty?                # => false
-	<dog_breeds.shuffle!              # modifies original array
+	<name.start_with?('S')       # => true
+	<dog_breeds.empty?           # => false
+	<dog_breeds.shuffle!         # modifies original array
 	<
 	<# String interpolation
-	<"Hello #{name}!"                 # => 'Hello Sam!'
+	<"Hello #{name}!"            # => 'Hello Sam!'
 	<# double quotes only
-	<'Hello #{name}!'                 # => 'Hello #{name}!'
+	<'Hello #{name}!'            # => 'Hello #{name}!'
+Debugging tools
+	irb
+	puts
+	inspect
+	Documentation!
+Debugging tools - irb
+	Exploring what methods an object has
+	<ruby
+	<irb(main):001:0> name = 'Sam'
+	<=> "Sam"
+	<
+	<irb(main):002:0> name.toupper
+	<NoMethodError: undefined method 'toupper' for "Sam":String
+	<
+	<irb(main):003:0> name.methods
+	<=> ["upcase!", "zip", "find_index", "between?", "to_f", ...
+Debugging tools - irb
+	Exploring what methods an object has
+	<ruby
+	<irb(main):004:0> name.methods.sort
+	<=> ["%", "*", "+", "<", "<<", "<=", "<=>", "==", "===", ...
+	<... "untaint", "upcase", "upcase!", "upto", "zip"]
+	<
+	<irb(main):005:0> name.upcase
+	<=> "SAM"
 Debugging tools - puts
 	<RUBY
 	<puts "Hello #{name}!"
@@ -158,7 +192,7 @@ Debugging tools - puts
 	<# 42
 Debugging tools - inspect
 	Useful if you don't know the type of a value
-	<RUBY
+	<ruby
 	<twitter_client = Twitter::Client.new(token)
 	<
 	<tweets = twitter_client.user_timeline('samstokes')
@@ -167,7 +201,7 @@ Debugging tools - inspect
 	<# Got tweets for samstokes: [#<Tweet>, #<Tweet>, ...]
 Debugging tools - p
 	Shortcut
-	<RUBY
+	<ruby
 	<p tweets
 	<# Got tweets for samstokes: [#<Tweet>, #<Tweet>, ...]
 	<
@@ -176,7 +210,131 @@ Debugging tools - p
 Documentation!
 	Ruby standard library has good docs
 		http://ruby-doc.org/
+		>MARKDOWN
+		>e.g. [String](http://ruby-doc.org/core-1.8.7/String.html)
 	So do most Ruby gems
+Processing data with Ruby
+	String#strip
+	String#split
+	Regular expressions
+	Searching
+String#strip
+	<RUBY
+	<# Simple string cleaning
+	<
+	<name = '  Sam Stokes   '
+	<
+	<name == 'Sam Stokes'
+	<# => false
+	<
+	<name.strip
+	<# => 'Sam Stokes'
+	<
+	<name.strip == 'Sam Stokes'
+	<# => true
+String#split
+	<RUBY
+	<data = 'Sam Stokes:Software Engineer:LinkedIn'
+	<
+	<data.split(':')
+	<# => [
+	<#      'Sam Stokes',
+	<#      'Software Engineer',
+	<#      'LinkedIn',
+	<#    ]
+Array#join
+	<RUBY
+	<data = [
+	<         'Sam Stokes',
+	<         'Software Engineer',
+	<         'LinkedIn',
+	<       ]
+	<
+	<data.join(':')
+Regular expressions
+	<RUBY
+	<email = 'sstokes@linkedin.com'
+	<
+	<def valid_email?(string)
+	<  string =~ /@/
+	<end
+	<
+	<valid_email? email
+	<# => true
+	<
+	<valid_email? 'Not an email'
+	<# => false
+Regular expressions
+	<RUBY
+	<email = 'sstokes@linkedin.com'
+	<
+	<groups = email.match /(.*)@(.*)/
+	<
+	<groups[1] # => 'sstokes'
+Searching
+	<RUBY
+	<# Find last time I tweeted about pizza
+	<
+	<tweets = get_tweets('samstokes')
+	<# => ['lol', 'I like pizza', ...]
+	<
+	<pizza = tweets.detect do |tweet|
+	<  tweet =~ /pizza/
+	<end
+	<
+	<puts pizza
+	<# I like pizza
+Searching
+	<RUBY
+	<# Find *all* my pizza tweets
+	<
+	<pizzas = tweets.select do |tweet|
+	<  tweet =~ /pizza/
+	<end
+	<
+	<pizzas
+	<# => ['I like pizza', 'pizza is cool', ...]
+Searching
+	<RUBY
+	<# Find all tweets *without* pizza
+	<
+	<non_pizzas = tweets.reject do |tweet|
+	<  tweet =~ /pizza/
+	<end
+	<
+	<non_pizzas
+	<# => ['lol', 'I like sandwiches', ...]
+RubyGems
+	Overview
+	Finding gems
+	Installing and using
+	Example gems
+RubyGems - Overview
+	A "gem" is a Ruby package
+	"RubyGems" is a global warehouse of gems
+		Open source
+		Anyone can create a gem
+		Some very high quality
+		Some experimental
+RubyGems - Finding gems
+	Google!
+	DEMO
+RubyGems - Installing and using
+	Install the gem
+	<BASH
+	<gem install twitter
+	Use the gem
+	<RUBY
+	<require 'twitter'
+	<
+RubyGems - Example gems
+	TODO
+Bundler
+	TODO
+Any questions?
+----- Session 2 -----
+Outline
+	TODO
 Blocks
 	<RUBY
 	<dog_breeds = ['Golden Retriever', 'Pomeranian', 'Chihuahua']
@@ -275,14 +433,5 @@ Defining classes
 	<class LoginScreen
 	<  def 
 	<end
-Data munging
-	String#split, String#strip
-	regex
-	Enumerable methods
-RubyGems
-	Installing and using
-	Finding gems
-	Examples
-	Bundler
 RVM
 Example - Testing Pulse Twitter sharing

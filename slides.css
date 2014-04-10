@@ -1,7 +1,10 @@
 body { font-family: Ubuntu }
 code { font-family: Ubuntu Mono }
-code.sourceCode {
-  font-size: 200%;
+pre.sourceCode.ruby {
+  font-size: 100%;
+}
+pre.sourceCode.RUBY {
+  font-size: 150%;
   line-height: 1em;
 }
 h1 {
@@ -10,6 +13,12 @@ h1 {
 }
 h2 { font-size: 120% }
 h3 { font-size: 100% }
+
+.huge {
+  font-size: 400%;
+  line-height: 3em;
+  text-align: center;
+}
 
 .slide > p {
   margin-left: 2em;
