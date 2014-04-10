@@ -1,4 +1,4 @@
-NAME = ruby-training
+NAME = ruby-training-1
 SLIDES_STYLESHEET = $(wildcard slides.css)
 IMAGES = $(wildcard *.png)
 ASSETS = $(IMAGES) $(SLIDES_STYLESHEET)
