@@ -1,64 +1,98 @@
 Ruby for Test Engineers - Session 2
 Outline
-	TODO
-RubyGems
-	Overview
-	Finding gems
-	Installing and using
-	Example gems
-RubyGems - Overview
-	A "gem" is a Ruby package
-	"RubyGems" is a global warehouse of gems
-		Open source
-		Anyone can create a gem
-		Some very high quality
-		Some experimental
-RubyGems - Finding gems
-	Google!
-	DEMO
-RubyGems - Installing and using
-	Install the gem
-	<BASH
-	<gem install twitter
-	Use the gem
+	Looping and blocks
+	RubyGems
+	Calling APIs
+		HTTP
+		JSON
+Looping and blocks
+Review - searching
 	<RUBY
-	<require 'twitter'
+	<numbers = [1, 2, 3, 4, 5]
 	<
-	TODO
-RubyGems - Example gems
-	TODO
-Bundler
-	TODO
-Blocks
+	<numbers.detect do |n|
+	<  n > 3
+	<end
+	<# => 4
+Review - searching
+	<ruby
+	<numbers = [1, 2, 3, 4, 5]
+	<
+	<numbers.select do |n|
+	<  n.odd?
+	<end
+	<# => [1, 3, 5]
+	<
+	<numbers.reject do |n|
+	<  n > 3
+	<end
+	<# => [1, 2, 3]
+Looping
 	<RUBY
-	<dog_breeds = ['Golden Retriever', 'Pomeranian', 'Chihuahua']
-	<dog_breeds.each do |dog|
+	<small_dogs = ['Corgi', 'Poodle', 'Chihuahua']
+	<small_dogs.each do |dog|
 	<  puts dog
 	<end
 	<# Prints:
-	<#   Golden Retriever
-	<#   Pomeranian
+	<#   Corgi
+	<#   Poodle
 	<#   Chihuahua
+Looping
+	<RUBY
+	<3.times do
+	<  puts "There's no place like home!"
+	<end
+	<# Prints:
+	<#   There's no place like home!
+	<#   There's no place like home!
+	<#   There's no place like home!
 Blocks
 	<RUBY
-	<dog_breeds = ['Golden Retriever', 'Pomeranian', 'Chihuahua']
-	<dog_breeds.each do |dog|
+	<small_dogs = ['Corgi', 'Poodle', 'Chihuahua']
+	<small_dogs.each do |dog|
 	<  puts dog
 	<end
 	>MARKDOWN
-	>*TODO* maybe this is confusing - Ryan thought blocks were for arrays
-	>
 	>`each` is just a method that Array supports
 	>
 	>Ruby method calls can take a code block
 	>
 	>`each` calls the block once for each item in the array
 	>
-	>passes the item as `dog`
+	>passes the item to the block as `dog`
+Blocks
+	<RUBY
+	<numbers = [1, 2, 3, 4, 5]
+	<numbers.detect do |n|
+	<  n > 3
+	<end
+	>MARKDOWN
+	>`detect` is another method on Array
+	>
+	>It calls the block once for each item...
+	>
+	>... until the block returns true
+	>
+	>... then stops and returns that item
+Block syntax
+	Alternative "curly brace" syntax
+	<ruby
+	<numbers.detect do |n|
+	<  n > 3
+	<end
+	<# => 4
+	<
+	<numbers.detect {|n| n > 3 }
+	<# => 4
+	Rule of thumb
+		>MARKDOWN
+		>Use `{|n| ... }` for one-liners
+		>
+		>Use `do |n| ... end` for multiple lines
 Using blocks
 	Run code on Android but not iOS:
-	<RUBY
-	<def if_android(&block)         # block argument starts with &
+	<ruby
+	<def if_android(&block)        # block argument starts with &
 	<  if device_type == 'android'
 	<    block.call
 	<  end
@@ -101,31 +135,119 @@ Blocks - setup and cleanup
 	clean up resources
 	undo changes
 	etc...
-Classes and objects
-	In Ruby everything is an object
+Blocks - error recovery
 	<RUBY
-	<3.class                  # => Fixnum
-	<3.odd?                   # => true
+	<# not logged in yet
 	<
-	<'Sam'.class              # => String
-	<'Sam'.upcase             # => 'SAM'
-	<
-	<[4, 5, 6].class          # => Array
-	<[4, 5, 6].size           # => 3
-Classes and objects
-	>MARKDOWN
-	>*Everything* is an object!
-	>--------------------------
-	<RUBY
-	<nil.class                # => NilClass
-	<
-	<nil.size                 # NoMethodError: undefined method
-	<                         # `size' for nil:NilClass
-Defining classes
-	TODO McTODO
-	<RUBY
-	<class LoginScreen
-	<  def 
+	<with_login('samstokes', 'secretpassword') do |user|
+	<  # in here we are logged in
+	<  button.cluck     # XXX misspelled!
 	<end
-RVM
-Example - Testing Pulse Twitter sharing
+	<
+	<# back to logged out
+	>MARKDOWN
+	>Use `ensure` to clean up even if an exception was thrown
+RubyGems
+RubyGems
+	Overview
+	Finding gems
+	Installing and using
+	Example gems
+RubyGems - Overview
+	A "gem" is a Ruby package
+	"RubyGems" is a global warehouse of gems
+		Open source
+		Anyone can create a gem
+		Some very high quality
+		Some experimental
+RubyGems - Finding gems
+	Google!
+	>MARKDOWN
+	>[Ruby Toolbox](https://www.ruby-toolbox.com/)
+	>--------------
+RubyGems - Installing
+	<BASH
+	<gem install faraday
+	Will install any dependent gems too
+RubyGems - Using
+	<RUBY
+	<require 'rubygems' # skip this on Ruby 1.9+
+	<
+	<require 'faraday'
+	<
+	<Faraday.get 'https://TODO.com/come/up/with/example'
+	<# => #<Faraday::Response:0x007fd00aadd6a8 ...>
+RubyGems - managing
+	What gems do I have?
+	<BASH
+	<gem list
+	Uninstall gems
+	<BASH
+	<gem uninstall faraday
+RubyGems - Example gems
+	json
+		parse and generate JSON
+	faraday
+		make HTTP requests
+	rails
+		build web apps
+	twitter
+		use the Twitter API
+Calling APIs
+HTTP
+	Library situation is a bit of a mess
+		Net::HTTP (builtin)
+		httparty
+		faraday
+		...
+	Faraday is reasonably easy to use
+HTTP - basic GET
+	Get data from a URL
+	<ruby
+	<require 'rubygems' # skip this on Ruby 1.9+
+	<require 'faraday'
+	<
+	<response = Faraday.get 'https://TODO.com/come/up/with/example'
+	<response.body
+	<# => "{\"responseData\":[{\"socialSummary\":
+	<#     {\"likedByCurrentUser\":false, ..."
+HTTP - more control
+	Specify URL parameters
+	<ruby
+	<connection = Faraday.new 'https://TODO.com'
+	<
+	<response = connection.get '/come/up/with/example',
+	<             {:prefix => 'twitter', :limit => 3, :type => 'all'}
+	<response.body
+JSON - basic usage
+	<RUBY
+	<require 'json'
+	<
+	<json = "{\"name\":\"Sam\",\"age\":29}"
+	<
+	<person = JSON.parse(json)
+	<# => {"name" => "Sam", "age" => 29}
+	<
+	<person['age']
+	<# => 29
+JSON - generating
+	<RUBY
+	<person = {
+	<  'name' => 'Sam',
+	<  'age' => 29,
+	<}
+	<
+	<JSON.generate(person)
+	<# => "{\"name\":\"Sam\",\"age\":29}"
+JSON - parsing search results
+	<ruby
+	<connection = Faraday.new 'https://TODO.com'
+	<response = connection.get '/come/up/with/example',
+	<             {:prefix => 'twitter', :limit => 3, :type => 'all'}
+	<json = response.body
+	<
+	<results = JSON.parse json
+	<
+	<first_result = results['responseData'][0]
+	<first_result['displayName']  # => 'Twitter'
+	<first_result['urn']          # => 'urn:li:company:42'
